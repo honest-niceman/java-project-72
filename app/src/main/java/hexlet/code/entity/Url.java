@@ -14,7 +14,7 @@ import java.time.Instant;
 @Entity
 public final class Url extends Model {
     @Id
-    private long id;
+    private Long id;
 
     private String name;
 
