@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+  <section layout:fragment="content">
+    <div class="container-lg mt-5">
+      <h1 th:text="'Web-site ' + ${url.getName()}"></h1>
+
+      <table class="table table-bordered table-hover mt-3">
+        <tbody>
+          <tr>
+            <td>ID</td>
+            <td th:text="${url.getId()}"></td>
+          </tr>
+          <tr>
+            <td>Name</td>
+            <td th:text="${url.getName()}"></td>
+          </tr>
+          <tr>
+            <td>Created at</td>
+            <td th:text="${#temporals.format(url.getCreatedAt(), 'dd/MM/yyyy HH:mm')}"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</html>
