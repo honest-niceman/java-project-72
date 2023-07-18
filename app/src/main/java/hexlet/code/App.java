@@ -35,6 +35,11 @@ public class App {
                     JavalinThymeleaf.init(getTemplateEngine());
                 })
                 .get("/", ctx -> ctx.render("main.html"));
+
+        javalin.before(ctx -> {
+            ctx.attribute("ctx", ctx);
+        });
+
         javalin.routes(() -> path("urls", () -> {
             post(UrlController.CreateEndpoint.handler);
             get(UrlController.ListShowEndpoint.handler);

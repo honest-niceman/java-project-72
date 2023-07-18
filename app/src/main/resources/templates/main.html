@@ -1,78 +1,29 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Pages analyzer</title>
-        <link rel='stylesheet' href='/webjars/bootstrap/5.1.1/css/bootstrap.min.css'>
-        <script src="/webjars/bootstrap/5.1.1/js/bootstrap.bundle.min.js"></script>
-    </head>
-
-
-    <body class="d-flex flex-column min-vh-100">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <div class="navbar-nav">
-                        <a class="nav-link" href="/">Main</a>
-                    </div>
-                </div>
-            </div>
-        </nav>
-
-        <section layout:fragment="content">
-            <div class="container-fluid bg-dark p-5">
-                <div class="row">
-                    <div class="col-md-10 col-lg-8 mx-auto text-white">
-                        <h1 class="display-3 mb-0">Pages analyzer</h1>
-                        <p class="lead">Check websites for SEO suitability for free</p>
-                        <form action="/urls" method="post" class="rss-form text-body">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-floating">
-                                        <input id="url-input" autofocus type="text" required name="url" aria-label="url"
-                                               class="form-control w-100" placeholder="ссылка RSS" autocomplete="off">
-                                        <label for="url-input">Link</label>
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <button type="submit" class="h-100 btn btn-lg btn-primary px-sm-5">Check</button>
-                                </div>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{application.html}">
+<section layout:fragment="content">
+    <div class="container-fluid bg-dark p-5">
+        <div class="row">
+            <div class="col-md-10 col-lg-8 mx-auto text-white">
+                <h1 class="display-3 mb-0">Pages analyzer</h1>
+                <p class="lead">Check websites for SEO suitability for free</p>
+                <form action="/urls" method="post" class="rss-form text-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-floating">
+                                <input id="url-input" autofocus type="text" required name="url" aria-label="url"
+                                       class="form-control w-100" placeholder="ссылка RSS" autocomplete="off">
+                                <label for="url-input">Link</label>
                             </div>
-                        </form>
-                        <p class="mt-2 mb-0 text-muted">Example: https://www.example.com</p>
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="h-100 btn btn-lg btn-primary px-sm-5">Check</button>
+                        </div>
                     </div>
-                </div>
+                </form>
+                <p class="mt-2 mb-0 text-muted">Example: https://www.example.com</p>
             </div>
-        </section>
-
-        <main class="flex-grow-1">
-            <div
-                    th:if="${session.flash}"
-                    th:class="'rounded-0 m-0 alert alert-dismissible fade show alert-' + ${ctx.consumeSessionAttribute('flash-type')}"
-                    role="alert"
-            >
-                <p class="m-0" th:text="${ctx.consumeSessionAttribute('flash')}"></p>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            <div class="container mt-4">
-                <h1 class="my-4">
-                    <section layout:fragment="header"></section>
-                </h1>
-                <section layout:fragment="content"></section>
-            </div>
-        </main>
-
-        <footer class="footer border-top py-3 mt-5 bg-light">
-            <div class="container-xl">
-                <div class="text-center">
-                    created by
-                    <a href="https://github.com/honest-niceman" target="_blank">Georgii</a>
-                </div>
-            </div>
-        </footer>
-    </body>
+        </div>
+    </div>
+</section>
 </html>
