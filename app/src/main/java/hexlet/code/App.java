@@ -14,7 +14,7 @@ public class App {
 
     public static final int PORT = 7070;
 
-    public static Javalin getAppAndInitializeDb() {
+    public static Javalin getApp() {
         Javalin javalin = Javalin.create(javalinConfig -> {
                     JavalinThymeleaf.configure(getTemplateEngine());
                 })
@@ -35,7 +35,7 @@ public class App {
     }
 
     public static void main(String[] args) {
-        Javalin app = getAppAndInitializeDb();
+        Javalin app = getApp();
         app.start(PORT);
     }
 

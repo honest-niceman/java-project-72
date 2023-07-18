@@ -1,7 +1,6 @@
 package hexlet.code;
 
 import hexlet.code.entity.Url;
-import hexlet.code.entity.query.QUrl;
 import io.ebean.DB;
 import io.ebean.Database;
 import io.javalin.Javalin;
@@ -37,7 +36,7 @@ class AppTest {
 
     @BeforeAll
     public static void beforeAll() throws IOException {
-        app = App.getAppAndInitializeDb();
+        app = App.getApp();
         app.start(777);
         int port = app.port();
         baseUrl = "http://localhost:" + port;
