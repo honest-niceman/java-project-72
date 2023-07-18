@@ -2,7 +2,7 @@ package hexlet.code;
 
 import hexlet.code.controller.UrlController;
 import io.javalin.Javalin;
-import io.javalin.rendering.template.JavalinThymeleaf;
+import io.javalin.plugin.rendering.template.JavalinThymeleaf;
 import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
@@ -30,9 +30,10 @@ public class App {
         }
     }
 
-    public static Javalin getApp() {
+    public static Javalin getAppAndInitializeDb() {
+        init();
         Javalin javalin = Javalin.create(javalinConfig -> {
-                    JavalinThymeleaf.init(getTemplateEngine());
+                    JavalinThymeleaf.configure(getTemplateEngine());
                 })
                 .get("/", ctx -> ctx.render("main.html"));
 
@@ -55,8 +56,7 @@ public class App {
     }
 
     public static void main(String[] args) {
-        init();
-        Javalin app = getApp();
+        Javalin app = getAppAndInitializeDb();
         app.start(PORT);
     }
 

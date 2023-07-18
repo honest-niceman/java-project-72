@@ -1,0 +1,12 @@
+ebean:
+  datasource:
+    default: test
+  test:
+    useDocker: false
+    platform: h2
+    ddlMode: dropCreate
+    dbName: test
+  ddl:
+    run: true
+    seedSql: seed.sql
+
