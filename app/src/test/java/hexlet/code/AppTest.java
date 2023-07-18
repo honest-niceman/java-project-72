@@ -24,7 +24,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class AppTest {
 
-    public static final int PORT = 777;
+    //use 0 to start at a random available port
+    public static final int PORT = 0;
 
     private static Javalin app;
     private static String baseUrl;
