@@ -47,7 +47,7 @@ public class UrlController {
 
         private static PagedList<Url> getUrlPagedList(int page, int rowsPerPage) {
             log.info("configurePages in");
-            return DB.byName(App.DB_NAME)
+            return DB.getDefault()
                     .find(Url.class)
                     .setFirstRow(page * rowsPerPage)
                     .setMaxRows(rowsPerPage)
@@ -72,7 +72,7 @@ public class UrlController {
             log.info("createUrl in");
             Url newUrl = new Url();
             newUrl.setName(normalizedUrl);
-            DB.byName(App.DB_NAME).save(newUrl);
+            DB.getDefault().save(newUrl);
             ctx.sessionAttribute("flash", "Страница успешно добавлена");
             ctx.sessionAttribute("flash-type", "success");
             ctx.redirect("/urls");
@@ -81,7 +81,7 @@ public class UrlController {
 
         private static boolean isUrlAlreadyExists(Context ctx, String normalizedUrl) {
             log.info("isUrlAlreadyExists in");
-            Url url = DB.byName(App.DB_NAME)
+            Url url = DB.getDefault()
                     .find(Url.class)
                     .select("name")
                     .where()
@@ -128,7 +128,7 @@ public class UrlController {
             log.info("SingleShowEndpoint in");
             int id = ctx.pathParamAsClass("id", Integer.class).getOrDefault(null);
 
-            Url url = DB.byName(App.DB_NAME)
+            Url url = DB.getDefault()
                     .find(Url.class, id);
 
             if (url == null) {

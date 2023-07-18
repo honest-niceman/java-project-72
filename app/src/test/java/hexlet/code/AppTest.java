@@ -102,8 +102,10 @@ class AppTest {
 
             assertThat(response.getStatus()).isEqualTo(200);
 
-            Url actualUrl = new QUrl()
-                    .name.equalTo(inputUrl)
+            Url actualUrl = database.find(Url.class)
+                    .select("name")
+                    .where()
+                    .eq("name", inputUrl)
                     .findOne();
 
             assertThat(actualUrl).isNotNull();

@@ -8,30 +8,13 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
-import java.io.IOException;
-import java.util.Properties;
-
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class App {
 
     public static final int PORT = 7070;
-    public static String DB_NAME;
-
-    private static String getDatabase() {
-        Properties prop = new Properties();
-        try {
-            prop.load(App.class.getClassLoader().getResourceAsStream("application.yaml"));
-            return prop.getProperty("dbSchema").equals("${APP_ENV}") ? "db" : prop.getProperty("dbSchema");
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
-            return "db";
-        }
-    }
 
     public static Javalin getAppAndInitializeDb() {
-        init();
         Javalin javalin = Javalin.create(javalinConfig -> {
                     JavalinThymeleaf.configure(getTemplateEngine());
                 })
@@ -49,10 +32,6 @@ public class App {
             });
         }));
         return javalin;
-    }
-
-    public static void init() {
-        DB_NAME = getDatabase();
     }
 
     public static void main(String[] args) {

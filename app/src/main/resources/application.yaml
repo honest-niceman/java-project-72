@@ -1,14 +1,15 @@
 ebean:
-  dbSchema: db
   migration:
     run: true
 
 datasource:
-  db:
+#modify run configuration in intellij. specify environment variable APP_ENV=dev or prod
+  default: ${APP_ENV}
+  development:
     username: sa
     password: sa
     url: jdbc:h2:mem:myapp
-  prod:
+  production:
     username: ${JDBC_DATABASE_USERNAME}
     password: ${JDBC_DATABASE_PASSWORD}
     url: ${JDBC_DATABASE_URL}
