@@ -1,6 +1,5 @@
 package hexlet.code.controller;
 
-import hexlet.code.App;
 import hexlet.code.entity.Url;
 import io.ebean.DB;
 import io.ebean.PagedList;
@@ -18,12 +17,13 @@ import java.util.stream.IntStream;
 public class UrlController {
 
     public static class ListShowEndpoint {
-        public static final Handler handler = ctx -> {
+        public static final int ROWS_PER_PAGE = 10;
+
+        public static final Handler HANDLER = ctx -> {
             log.info("ListShowEndpoint int");
             int page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1) - 1;
-            int rowsPerPage = 10;
 
-            PagedList<Url> pagedUrls = getUrlPagedList(page, rowsPerPage);
+            PagedList<Url> pagedUrls = getUrlPagedList(page, ROWS_PER_PAGE);
             List<Url> urls = pagedUrls.getList();
             configurePages(ctx, pagedUrls);
 
@@ -57,13 +57,17 @@ public class UrlController {
     }
 
     public static class CreateEndpoint {
-        public static final Handler handler = ctx -> {
+        public static final Handler HANDLER = ctx -> {
             log.info("CreateEndpoint in");
             String urlInput = ctx.formParam("url");
             URL url = parseUrl(ctx, urlInput);
-            if (url == null) return;
+            if (url == null) {
+                return;
+            }
             String normalizedUrl = getNormalizedUrl(url);
-            if (isUrlAlreadyExists(ctx, normalizedUrl)) return;
+            if (isUrlAlreadyExists(ctx, normalizedUrl)) {
+                return;
+            }
             createUrl(ctx, normalizedUrl);
             log.info("CreateEndpoint out");
         };
@@ -89,7 +93,8 @@ public class UrlController {
                     .findOne();
             if (url != null) {
                 ctx.sessionAttribute("flash",
-                        "Страница уже существует. Используй urls/%d чтобы получить информацию о ней.".formatted(url.getId()));
+                        "Страница уже существует. Используй urls/%d чтобы получить информацию о ней."
+                                .formatted(url.getId()));
                 ctx.sessionAttribute("flash-type", "info");
                 ctx.redirect("/");
                 log.info("isUrlAlreadyExists out != null");
@@ -124,7 +129,7 @@ public class UrlController {
     }
 
     public static class SingleShowEndpoint {
-        public static Handler handler = ctx -> {
+        public static final Handler HANDLER = ctx -> {
             log.info("SingleShowEndpoint in");
             int id = ctx.pathParamAsClass("id", Integer.class).getOrDefault(null);
 

@@ -8,28 +8,25 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
-import static io.javalin.apibuilder.ApiBuilder.*;
+import static io.javalin.apibuilder.ApiBuilder.get;
+import static io.javalin.apibuilder.ApiBuilder.path;
+import static io.javalin.apibuilder.ApiBuilder.post;
 
 public class App {
 
     public static final int PORT = 7070;
 
     public static Javalin getApp() {
-        Javalin javalin = Javalin.create(javalinConfig -> {
-                    JavalinThymeleaf.configure(getTemplateEngine());
-                })
+        Javalin javalin = Javalin
+                .create(javalinConfig -> JavalinThymeleaf.configure(getTemplateEngine()))
                 .get("/", ctx -> ctx.render("main.html"));
 
-        javalin.before(ctx -> {
-            ctx.attribute("ctx", ctx);
-        });
+        javalin.before(ctx -> ctx.attribute("ctx", ctx));
 
         javalin.routes(() -> path("urls", () -> {
-            post(UrlController.CreateEndpoint.handler);
-            get(UrlController.ListShowEndpoint.handler);
-            path("{id}", () -> {
-                get(UrlController.SingleShowEndpoint.handler);
-            });
+            post(UrlController.CreateEndpoint.HANDLER);
+            get(UrlController.ListShowEndpoint.HANDLER);
+            path("{id}", () -> get(UrlController.SingleShowEndpoint.HANDLER));
         }));
         return javalin;
     }

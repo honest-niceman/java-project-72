@@ -9,6 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.time.Instant;
 
+/**
+ * Url entity.
+ */
 @Getter
 @Setter
 @Entity
