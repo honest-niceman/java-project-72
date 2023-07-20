@@ -92,8 +92,7 @@ public class UrlController {
                         "Страница уже существует. Используй urls/%d чтобы получить информацию о ней."
                                 .formatted(url.getId()));
                 ctx.sessionAttribute("flash-type", "info");
-                ctx.status(HttpStatus.FOUND);
-                ctx.redirect("/");
+                ctx.redirect("/urls/" + url.getId(), HttpStatus.FOUND);
                 return true;
             }
             log.debug("Url with name: %s doesn't exists yet.".formatted(normalizedUrl));

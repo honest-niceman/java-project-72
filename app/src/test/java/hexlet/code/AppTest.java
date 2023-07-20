@@ -96,7 +96,7 @@ class AppTest {
                 .field("url", inputUrl)
                 .asString();
 
-        assertThat(responsePost.getBody().toString()).contains("Страница уже существует.");
+        assertThat(responsePost.getStatus()).isEqualTo(HttpStatus.FOUND);
 
         HttpResponse<String> response = Unirest
                 .get(baseUrl + "/urls")
