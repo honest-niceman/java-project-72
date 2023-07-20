@@ -1,6 +1,9 @@
 package hexlet.code;
 
+import hexlet.code.db.dao.UrlCheckDao;
+import hexlet.code.db.dao.UrlDao;
 import hexlet.code.entity.Url;
+import hexlet.code.entity.UrlCheck;
 import io.ebean.DB;
 import io.ebean.Database;
 import io.javalin.Javalin;
@@ -12,7 +15,6 @@ import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -62,60 +64,84 @@ class AppTest {
         mockServer.shutdown();
     }
 
-    @Nested
-    class RootTest {
-        @Test
-        void testIndex() {
-            HttpResponse<String> response = Unirest.get(baseUrl).asString();
-            assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
-        }
+    @AfterEach
+    void afterEach() {
+        database.script().run("/truncate.sql");
+        database.script().run("/seed.sql");
     }
 
-    @Nested
-    class UrlTest {
+    @Test
+    void testIndex() {
+        HttpResponse<String> response = Unirest.get(baseUrl).asString();
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
+    }
 
-        @AfterEach
-        void afterEach() {
-            database.script().run("/truncate.sql");
-            database.script().run("/seed.sql");
-        }
+    @Test
+    void urlIndexTest() {
+        HttpResponse<String> response = Unirest.get(baseUrl + "/urls").asString();
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
+    }
 
-        @Test
-        void testIndex() {
-            HttpResponse<String> response = Unirest.get(baseUrl + "/urls").asString();
-            assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
-        }
+    @Test
+    void urlShowTest() {
+        HttpResponse<String> response = Unirest.get(baseUrl + "/urls/" + 1).asString();
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
+    }
 
-        @Test
-        void testShow() {
-            HttpResponse<String> response = Unirest.get(baseUrl + "/urls/" + 1).asString();
-            assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
-        }
+    @Test
+    void urlStoreTest() {
+        String inputUrl = "https://github.com";
+        HttpResponse<?> responsePost = Unirest
+                .post(baseUrl + "/urls")
+                .field("url", inputUrl)
+                .asString();
 
-        @Test
-        void testStore() {
-            String inputUrl = "https://github.com";
-            HttpResponse<?> responsePost = Unirest
-                    .post(baseUrl + "/urls")
-                    .field("url", inputUrl)
-                    .asString();
+        assertThat(responsePost.getBody().toString()).contains("Страница уже существует.");
 
-            assertThat(responsePost.getBody().toString()).contains("Страница уже существует.");
+        HttpResponse<String> response = Unirest
+                .get(baseUrl + "/urls")
+                .asString();
 
-            HttpResponse<String> response = Unirest
-                    .get(baseUrl + "/urls")
-                    .asString();
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
 
-            assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
+        Url actualUrl = database.find(Url.class)
+                .select("name")
+                .where()
+                .eq("name", inputUrl)
+                .findOne();
 
-            Url actualUrl = database.find(Url.class)
-                    .select("name")
-                    .where()
-                    .eq("name", inputUrl)
-                    .findOne();
+        assertThat(actualUrl).isNotNull();
+        assertThat(actualUrl.getName()).isEqualTo(inputUrl);
+    }
 
-            assertThat(actualUrl).isNotNull();
-            assertThat(actualUrl.getName()).isEqualTo(inputUrl);
-        }
+    @Test
+    void urlCheckStoreTest() {
+        String url = mockServer.url("/").toString().replaceAll("/$", "");
+
+        Unirest.post(baseUrl + "/urls")
+                .field("url", url)
+                .asEmpty();
+
+        Url actualUrl = UrlDao.getUrlByName(url);
+
+        assertThat(actualUrl).isNotNull();
+        assertThat(actualUrl.getName()).isEqualTo(url);
+
+        Unirest.post(baseUrl + "/urls/" + actualUrl.getId() + "/checks")
+                .asEmpty();
+
+        HttpResponse<String> response = Unirest
+                .get(baseUrl + "/urls/" + actualUrl.getId())
+                .asString();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
+
+        UrlCheck actualCheckUrl = UrlCheckDao.getUrlChecksMap().get(actualUrl.getId());
+
+        assertThat(actualCheckUrl).isNotNull();
+        assertThat(actualCheckUrl.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actualCheckUrl.getTitle()).isEqualTo("Test page");
+        assertThat(actualCheckUrl.getH1()).isEqualTo("Do not expect a miracle, miracles yourself!");
+        assertThat(actualCheckUrl.getDescription()).contains("statements of great people");
     }
 }
