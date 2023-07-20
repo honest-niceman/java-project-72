@@ -5,6 +5,7 @@ import io.ebean.DB;
 import io.ebean.PagedList;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
+import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 import lombok.extern.slf4j.Slf4j;
 
@@ -96,6 +97,7 @@ public class UrlController {
                         "Страница уже существует. Используй urls/%d чтобы получить информацию о ней."
                                 .formatted(url.getId()));
                 ctx.sessionAttribute("flash-type", "info");
+                ctx.status(HttpStatus.FOUND);
                 ctx.redirect("/");
                 log.info("isUrlAlreadyExists out != null");
                 return true;

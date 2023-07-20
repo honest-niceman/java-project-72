@@ -94,14 +94,13 @@ class AppTest {
 
         @Test
         void testStore() {
-            String inputUrl = "https://github.com/honest-niceman";
+            String inputUrl = "https://github.com";
             HttpResponse<?> responsePost = Unirest
                     .post(baseUrl + "/urls")
                     .field("url", inputUrl)
-                    .asEmpty();
+                    .asString();
 
-            assertThat(responsePost.getStatus()).isEqualTo(HttpStatus.FOUND);
-            assertThat(responsePost.getHeaders().getFirst("Location")).isEqualTo("/urls");
+            assertThat(responsePost.getBody().toString()).contains("Страница уже существует.");
 
             HttpResponse<String> response = Unirest
                     .get(baseUrl + "/urls")

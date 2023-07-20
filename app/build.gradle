@@ -1,8 +1,10 @@
 plugins {
+    id('idea')
     id 'application'
     id 'checkstyle'
-    id 'io.ebean' version '13.7.0'
+    id 'io.ebean' version '13.20.1'
     id 'jacoco'
+    id 'com.github.ben-manes.versions' version '0.47.0'
 }
 
 group = 'hexlet.code'
@@ -13,45 +15,43 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.javalin:javalin:4.1.0'
-    implementation 'org.slf4j:slf4j-simple:1.7.32'
+    implementation 'io.javalin:javalin:5.6.1'
+    implementation 'io.javalin:javalin-rendering:5.6.0'
+    implementation 'org.slf4j:slf4j-simple:2.0.7'
 
-    implementation 'org.thymeleaf:thymeleaf:3.0.12.RELEASE'
-    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.0.0'
+    implementation 'org.thymeleaf:thymeleaf:3.1.1.RELEASE'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.2.1'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE'
-    implementation 'org.webjars:bootstrap:5.1.1'
+    implementation 'org.webjars:bootstrap:5.3.0'
 
-    implementation 'com.h2database:h2:1.4.200'
-    implementation 'org.postgresql:postgresql:42.2.24'
+    implementation 'com.h2database:h2:2.2.220'
+    implementation 'org.postgresql:postgresql:42.6.0'
 
-    implementation 'io.ebean:ebean:13.11.0'
-    implementation 'io.ebean:ebean-ddl-generator:13.11.0'
-    implementation 'io.ebean:ebean-querybean:13.11.0'
-    implementation 'io.ebean:ebean-migration:13.6.2'
-    implementation 'io.ebean:ebean-annotation:8.3'
-    annotationProcessor 'io.ebean:querybean-generator:13.11.0'
+    implementation 'io.ebean:ebean:' + findProperty('io.ebean')
+    implementation 'io.ebean:ebean-ddl-generator:' + findProperty('io.ebean')
+    implementation 'io.ebean:ebean-querybean:' + findProperty('io.ebean')
+    implementation 'io.ebean:ebean-migration:13.9.0'
+    implementation 'io.ebean:ebean-annotation:8.4'
+    annotationProcessor 'io.ebean:querybean-generator:' + findProperty('io.ebean')
 
 
     // NOTE: ebean-ddl-generator требует старые зависимости, которых нет в java 9 и выше
-    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.5'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.3'
     implementation 'javax.activation:activation:1.1.1'
-    // implementation 'javax.xml.bind:jaxb-api:2.3.0'
-    // implementation 'com.sun.xml.bind:jaxb-impl:2.3.0'
 
-    // implementation 'commons-validator:commons-validator:1.7'
-    implementation 'org.jsoup:jsoup:1.14.3'
-    implementation 'com.konghq:unirest-java:3.13.0'
+    implementation 'org.jsoup:jsoup:1.16.1'
+    implementation 'com.konghq:unirest-java:4.0.0-RC2'
 
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.1'
-    testImplementation 'org.assertj:assertj-core:3.21.0'
-    testImplementation 'io.ebean:ebean-test:12.12.1'
-    testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0-RC2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.0-RC2'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
+    testImplementation 'io.ebean:ebean-test:' + findProperty('io.ebean')
+    testImplementation 'com.squareup.okhttp3:mockwebserver:5.0.0-alpha.11'
 
-    compileOnly 'org.projectlombok:lombok:1.18.28'
-    annotationProcessor 'org.projectlombok:lombok:1.18.28'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
-    testCompileOnly 'org.projectlombok:lombok:1.18.28'
+    compileOnly 'org.projectlombok:lombok:' + findProperty('org.projectlombok')
+    annotationProcessor 'org.projectlombok:lombok:' + findProperty('org.projectlombok')
+    testAnnotationProcessor 'org.projectlombok:lombok:' + findProperty('org.projectlombok')
+    testCompileOnly 'org.projectlombok:lombok:' + findProperty('org.projectlombok')
 }
 
 test {
@@ -59,7 +59,7 @@ test {
 }
 
 compileJava {
-    options.release = 17
+    options.release = 20
 }
 
 application {
