@@ -26,7 +26,10 @@ public class App {
         javalin.routes(() -> path("urls", () -> {
             post(UrlController.CreateEndpoint.HANDLER);
             get(UrlController.ListShowEndpoint.HANDLER);
-            path("{id}", () -> get(UrlController.SingleShowEndpoint.HANDLER));
+            path("{id}", () -> {
+                get(UrlController.SingleShowEndpoint.HANDLER);
+                path("checks", () -> post(UrlController.UrlChecksEndpoint.HANDLER));
+            });
         }));
         return javalin;
     }
