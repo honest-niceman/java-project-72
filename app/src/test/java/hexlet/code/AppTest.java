@@ -140,8 +140,8 @@ class AppTest {
 
         assertThat(actualCheckUrl).isNotNull();
         assertThat(actualCheckUrl.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actualCheckUrl.getTitle()).isEqualTo("Test page");
-        assertThat(actualCheckUrl.getH1()).isEqualTo("Do not expect a miracle, miracles yourself!");
-        assertThat(actualCheckUrl.getDescription()).contains("statements of great people");
+        assertThat(actualCheckUrl.getTitle()).isEqualTo("Test title");
+        assertThat(actualCheckUrl.getH1()).isEqualTo("h1 example");
+        assertThat(actualCheckUrl.getDescription()).contains("description text");
     }
 }

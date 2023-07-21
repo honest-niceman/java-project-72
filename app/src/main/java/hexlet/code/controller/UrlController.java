@@ -1,5 +1,6 @@
 package hexlet.code.controller;
 
+import hexlet.code.utils.Messages;
 import hexlet.code.db.dao.UrlCheckDao;
 import hexlet.code.db.dao.UrlDao;
 import hexlet.code.entity.Url;
@@ -79,7 +80,7 @@ public class UrlController {
         private static void createUrl(Context ctx, String normalizedUrl) {
             Url url = UrlDao.createUrl(normalizedUrl);
             log.debug("Url saved: %s.".formatted(url));
-            ctx.sessionAttribute("flash", "Страница успешно добавлена");
+            ctx.sessionAttribute("flash", Messages.SUCCESS);
             ctx.sessionAttribute("flash-type", "success");
             ctx.redirect("/urls");
         }
@@ -88,9 +89,7 @@ public class UrlController {
             Url url = UrlDao.getUrlByName(normalizedUrl);
             if (url != null) {
                 log.debug("Url with such name: %s ,already exists.".formatted(normalizedUrl));
-                ctx.sessionAttribute("flash",
-                        "Страница уже существует. Используй urls/%d чтобы получить информацию о ней."
-                                .formatted(url.getId()));
+                ctx.sessionAttribute("flash", Messages.FOUND);
                 ctx.sessionAttribute("flash-type", "info");
                 ctx.redirect("/urls/" + url.getId(), HttpStatus.FOUND);
                 return true;
@@ -112,7 +111,7 @@ public class UrlController {
             try {
                 return new URI(urlInput).toURL();
             } catch (URISyntaxException | MalformedURLException e) {
-                ctx.sessionAttribute("flash", "Некорректный URL");
+                ctx.sessionAttribute("flash", Messages.INCORRECT_URL);
                 ctx.sessionAttribute("flash-type", "danger");
                 ctx.redirect("/");
                 return null;
@@ -155,10 +154,10 @@ public class UrlController {
 
                 createUrlCheck(url, response, doc);
 
-                ctx.sessionAttribute("flash", "Страница успешно проверена");
+                ctx.sessionAttribute("flash", Messages.CHECK_SUCCESS);
                 ctx.sessionAttribute("flash-type", "success");
             } catch (UnirestException e) {
-                ctx.sessionAttribute("flash", "Некорректный адрес");
+                ctx.sessionAttribute("flash", Messages.INCORRECT_URL);
                 ctx.sessionAttribute("flash-type", "danger");
             } catch (Exception e) {
                 ctx.sessionAttribute("flash", e.getMessage());
