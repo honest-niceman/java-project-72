@@ -110,7 +110,7 @@ public class UrlController {
         private static URL parseUrl(Context ctx, String urlInput) {
             try {
                 return new URI(urlInput).toURL();
-            } catch (URISyntaxException | MalformedURLException e) {
+            } catch (URISyntaxException | MalformedURLException | IllegalArgumentException e) {
                 ctx.sessionAttribute("flash", Messages.INCORRECT_URL);
                 ctx.sessionAttribute("flash-type", "danger");
                 ctx.redirect("/");
